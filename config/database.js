@@ -1,14 +1,14 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const bancoDados = mysql.createConnection({
-    host: 'localhost:3000',
+const connection = mysql.createConnection({
+    host: 'localhost',
     user: 'root',
     password: '',
     database: 'aplication',
 });
 
-bancoDados.connect((err) => {
+connection.connect((err) => {
     if(err) {
         console.log('Erro ao conectar ao Banco', err)
         return;
@@ -17,4 +17,4 @@ bancoDados.connect((err) => {
     }
 })
 
-module.exports = bancoDados
+module.exports = connection

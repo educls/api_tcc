@@ -1,4 +1,6 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
+const host = process.env.DB_HOST
 
 exports.verificaSeEmailUsuarioExistente = async (req) => {
 
@@ -19,12 +21,12 @@ exports.verificaSeEmailUsuarioExistente = async (req) => {
 }
 
 exports.cadastraUsuario = async (usuario) => {
+    const id_usuario = usuario.id_usuario
     const username = usuario.username
     const email = usuario.email
     const password = usuario.password
 
     if (username === undefined || email === undefined || password === undefined) {
-        console.log(username, email, password)
         throw new Error("Um ou mais campos obrigatorios estao nulos");
     }
 
@@ -34,13 +36,46 @@ exports.cadastraUsuario = async (usuario) => {
         password: '',
         database: 'aplication',
     });
-    let sqlCommand = 'insert into usuarios (username, email, password) values (?, ?, ?)'
+    let sqlCommand = 'insert into usuarios (id_usuario, username, email, password) values (?, ?, ?, ?)'
 
-    const [resultado] = await connection.execute(sqlCommand, [username, email, password]);
+    const [resultado] = await connection.execute(sqlCommand, [id_usuario, username, email, password]);
 
     if(resultado.affectedRows > 0){
         return true
     }else {
         return false
     }
+}
+
+exports.listaUsuario = async (id) => {
+
+    const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'aplication',
+    });
+
+    let sqlCommand = 'select * from usuarios where id_usuario = ? and status = ?'
+
+    const [rows] = await connection.execute(sqlCommand, [id, 'ativo'])
+    await connection.end();
+
+    return rows
+}
+
+exports.deletaUsuario = async (id) => {
+    const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'aplication',
+    });
+
+    let sqlCommand = 'update usuarios set status = ? where id_usuario = ?'
+
+    const [rows] = await connection.execute(sqlCommand, ['inativo',id])
+    await connection.end();
+
+    return rows
 }
