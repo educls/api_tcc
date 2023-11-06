@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const Database = require('../models/Database')
 
 exports.verificaSeEmailUsuarioExistente = async (req) => {
 

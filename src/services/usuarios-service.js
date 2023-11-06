@@ -8,25 +8,27 @@ exports.verificaSeEmailUsuarioExistente = async (req) => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'aplication',
-      });
+        database: 'aplication1.3',
+    });
 
-    const {email} = req.body;
-    let sqlCommand = 'select * from usuarios where email = ?'
+    const {Email} = req.body;
+    let sqlCommand = 'select * from usuarios where Email = ?'
 
-    const [rows] = await connection.execute(sqlCommand, [email])
+    const [rows] = await connection.execute(sqlCommand, [Email])
     await connection.end();
 
     return rows
 }
 
 exports.cadastraUsuario = async (usuario) => {
-    const id_usuario = usuario.id_usuario
-    const username = usuario.username
-    const email = usuario.email
-    const password = usuario.password
+    const Nome = usuario.Nome
+    const Email = usuario.Email
+    const Senha = usuario.Senha
+    const CPF = usuario.CPF
+    const Telefone = usuario.Telefone
+    const Endereco = usuario.Endereco
 
-    if (username === undefined || email === undefined || password === undefined) {
+    if (Endereco === undefined || Nome === undefined || CPF === undefined) {
         throw new Error("Um ou mais campos obrigatorios estao nulos");
     }
 
@@ -34,13 +36,20 @@ exports.cadastraUsuario = async (usuario) => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'aplication',
+        database: 'aplication1.3',
     });
-    let sqlCommand = 'insert into usuarios (id_usuario, username, email, password) values (?, ?, ?, ?)'
 
-    const [resultado] = await connection.execute(sqlCommand, [id_usuario, username, email, password]);
+    let sqlCommand = 'insert into usuarios (nome, email, senha, cpf, telefone, status) values (?, ?, ?, ?, ?, ?)'
 
-    if(resultado.affectedRows > 0){
+    const [resultado] = await connection.execute(sqlCommand, [Nome, Email, Senha, CPF, Telefone, "ativo"]);
+    const idPacienteInserido = resultado.insertId;
+    console.log(idPacienteInserido)
+
+    sqlCommand = 'insert into enderecos (Bairro, Rua, Numero, ID_Paciente) values (?, ?, ?, ?)'
+
+    const [resultadoEndereco] = await connection.execute(sqlCommand, [Endereco.bairro, Endereco.rua, Endereco.numero, idPacienteInserido])
+
+    if(resultado.affectedRows > 0 || resultadoEndereco.affectedRows > 0){
         return true
     }else {
         return false
@@ -53,10 +62,10 @@ exports.listaUsuario = async (id) => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'aplication',
+        database: 'aplication1.3',
     });
 
-    let sqlCommand = 'select * from usuarios where id_usuario = ? and status = ?'
+    let sqlCommand = 'select * from usuarios where ID_Paciente = ? and Status = ?'
 
     const [rows] = await connection.execute(sqlCommand, [id, 'ativo'])
     await connection.end();
@@ -69,10 +78,10 @@ exports.deletaUsuario = async (id) => {
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'aplication',
+        database: 'aplication1.3',
     });
 
-    let sqlCommand = 'update usuarios set status = ? where id_usuario = ?'
+    let sqlCommand = 'update usuarios set Status = ? where ID_Paciente = ?'
 
     const [rows] = await connection.execute(sqlCommand, ['inativo',id])
     await connection.end();

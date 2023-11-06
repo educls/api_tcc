@@ -10,20 +10,25 @@ exports.post = async (req, res) => {
             return res.status(400).json({message: 'Email ja cadastrado....'})
         };
 
-        let { username, email, password } = req.body;
-        const id_usuario = geraID()
+        const Endereco = {
+            bairro: req.body.Endereco.bairro,
+            rua: req.body.Endereco.rua,
+            numero: req.body.Endereco.numero
+        }
 
-        password = await bcrypt.hash(password, 10);
+        let { Nome, Email, Senha, CPF, Telefone } = req.body;
 
-        const novoUsuario = new UsuarioModel(id_usuario, username, email, password)
+        //Senha = await bcrypt.hash(Senha, 10);
+
+        const novoUsuario = new UsuarioModel(Nome, Email, Senha, CPF, Telefone, Endereco)
+
         
         const resultado = await serviceUsuarios.cadastraUsuario(novoUsuario)
         
         if(resultado == true){
             res.status(201).json(
                 {
-                    message: 'Usuario Cadastrado com sucesso',
-                    id: id_usuario
+                    message: 'Usuario Cadastrado com sucesso'
                 }
             )
         }else if(resultado == false) {

@@ -1,11 +1,13 @@
 
 
 class UsuarioModel {
-    constructor(id_usuario, username, email, password){
-        this.id_usuario = id_usuario
-        this.username = username;
-        this.email = email;
-        this.password = password;
+    constructor(Nome, Email, Senha, CPF, Telefone, Endereco){
+        this.Nome = Nome;
+        this.Email = Email;
+        this.Senha = Senha;
+        this.CPF = CPF;
+        this.Telefone = Telefone;
+        this.Endereco = Endereco;
     }
 }
 
