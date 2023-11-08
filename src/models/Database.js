@@ -6,7 +6,7 @@ class Database {
             host: 'localhost',
             user: 'root',
             password: '',
-            database: 'aplication'
+            database: 'aplication1.3'
         });
     }
     async query(sqlCommand, values){

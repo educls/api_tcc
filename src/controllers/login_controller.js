@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config();
 const serviceLogin = require('../services/login_service')
 const LoginModel = require('../models/UsuarioModel')
+const constant = require('../utils/constants')
 const secretKey = 'xyz@9988027';
 
 exports.post = async (req, res) => {
@@ -17,15 +18,15 @@ exports.post = async (req, res) => {
 
             const token = jwt.sign(novoLogin, secretKey, { expiresIn: '1h' })
 
-            return res.status(200).json({message: 'Login Realizado....', token})
+            return res.status(200).json({message: constant.LOGIN_SUCESSFULL, token})
         }else{
-            return res.status(401).json({message: 'Login não Realizado....'})
+            return res.status(401).json({message: constant.LOGIN_UNSUCCESSFUL})
         }
 
     }catch(error){
-        console.log('Erro ao registrar:', error)
+        console.log(constant.REGISTER_ERROR, error)
         res.status(500).json(
-            {message: 'Opaa Erro no servidor'}
+            {message: constant.SERVER_ERROR}
         );
     }
 }
