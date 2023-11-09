@@ -4,7 +4,6 @@ require('dotenv').config();
 const serviceLogin = require('../services/login_service')
 const LoginModel = require('../models/UsuarioModel')
 const constant = require('../utils/constants')
-const secretKey = 'xyz@9988027';
 
 exports.post = async (req, res) => {
     try{
@@ -16,7 +15,7 @@ exports.post = async (req, res) => {
 
             const novoLogin = {email: email, password: password}
 
-            const token = jwt.sign(novoLogin, secretKey, { expiresIn: '1h' })
+            const token = jwt.sign(novoLogin, constant.SECRET_KEY, { expiresIn: '1h' })
 
             return res.status(200).json({message: constant.LOGIN_SUCESSFULL, token})
         }else{

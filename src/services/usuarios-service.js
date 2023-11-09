@@ -1,14 +1,16 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
+const constants = require('../utils/constants');
+
 const host = process.env.DB_HOST
 
 exports.verificaSeEmailUsuarioExistente = async (req) => {
 
     const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'aplication1.3',
+        host: constants.HOST_DB,
+        user: constants.DB_USER,
+        password: constants.DB_PASSWORD,
+        database: constants.DB_DATABASE
     });
 
     const {Email} = req.body;
@@ -29,14 +31,14 @@ exports.cadastraUsuario = async (usuario) => {
     const Endereco = usuario.Endereco
 
     if (Endereco === undefined || Nome === undefined || CPF === undefined) {
-        throw new Error("Um ou mais campos obrigatorios estao nulos");
+        throw new Error(constants.SOME_FIELDS_NULL);
     }
 
     const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'aplication1.3',
+        host: constants.HOST_DB,
+        user: constants.DB_USER,
+        password: constants.DB_PASSWORD,
+        database: constants.DB_DATABASE
     });
 
     let sqlCommand = 'insert into usuarios (nome, email, senha, cpf, telefone, status) values (?, ?, ?, ?, ?, ?)'
@@ -59,10 +61,10 @@ exports.cadastraUsuario = async (usuario) => {
 exports.listaUsuario = async (id) => {
 
     const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'aplication1.3',
+        host: constants.HOST_DB,
+        user: constants.DB_USER,
+        password: constants.DB_PASSWORD,
+        database: constants.DB_DATABASE
     });
 
     let sqlCommand = 'select * from usuarios where ID_Paciente = ? and Status = ?'
@@ -75,10 +77,10 @@ exports.listaUsuario = async (id) => {
 
 exports.deletaUsuario = async (id) => {
     const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'aplication1.3',
+        host: constants.HOST_DB,
+        user: constants.DB_USER,
+        password: constants.DB_PASSWORD,
+        database: constants.DB_DATABASE
     });
 
     let sqlCommand = 'update usuarios set Status = ? where ID_Paciente = ?'
