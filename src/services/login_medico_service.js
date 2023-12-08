@@ -4,13 +4,13 @@ const constants = require('../utils/constants');
 
 const db = new Database();
 
-exports.verificaSeEmailUsuarioExistente = async (req) => {
+exports.verificaCrmMedicoExistente = async (req) => {
 
     await db.connect();
+    
+    const { CRM } = req.body;
 
-    const {email} = req.body;
-
-    const rows = await db.query(constants.SQL_SELECT_EMAIL_AND_STATUS, [email, 'ativo'])
+    const rows = await db.query(constants.SQL_SELECT_CRM_PHYSICIAN, [CRM])
     await db.close();
 
     return rows

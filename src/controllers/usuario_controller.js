@@ -7,24 +7,18 @@ const constants = require('../utils/constants');
 exports.post = async (req, res) => {
     try{
         const rows = await serviceUsuarios.verificaSeEmailUsuarioExistente(req)
-        if(rows.length > 0) {
+        if(rows != null) {
             return res.status(400).json({message: constants.EMAIL_ALREADY_EXISTS})
         };
 
-        const Endereco = {
-            estado: req.body.Endereco.estado,
-            cidade: req.body.Endereco.cidade,
-            bairro: req.body.Endereco.bairro,
-            rua: req.body.Endereco.rua,
-            numero: req.body.Endereco.numero
-        }
+        const { estado, cidade, bairro, rua, numero } = req.body.Endereco;
+        const Endereco = { estado, cidade, bairro, rua, numero };
 
         let { Nome, Email, Senha, CPF, Telefone } = req.body;
 
         //Senha = await bcrypt.hash(Senha, 10);
 
         const novoUsuario = new UsuarioModel(Nome, Email, Senha, CPF, Telefone, Endereco)
-
         
         const resultado = await serviceUsuarios.cadastraUsuario(novoUsuario)
         
@@ -48,10 +42,11 @@ exports.post = async (req, res) => {
 
 exports.get = async (req, res) => {
     try{
-        const { id } = req.params
         let usuarioInfos = []
 
-        usuarioInfos = await serviceUsuarios.listaUsuario(id)
+        const id_user = req.user.id
+
+        usuarioInfos = await serviceUsuarios.listaUsuario(id_user)
 
         if(usuarioInfos.length <= 0) {
             return res.status(401).json({message: constants.USER_NOT_FOUND})
@@ -60,15 +55,17 @@ exports.get = async (req, res) => {
 
     }catch(error){
         console.log(constants.REGISTER_ERROR, error)
-        res.status(500).json({message: constants.SERVER_ERROR});
+        res.status(500).json(
+            {message: constants.SERVER_ERROR}
+        );
     }
 }
 
 exports.delete = async (req, res) => {
     try{
-        const { id } = req.params
+        const id_user = req.user.id
 
-        const returnDelete = serviceUsuarios.deletaUsuario(id)
+        const returnDelete = serviceUsuarios.deletaUsuario(id_user)
 
         if(returnDelete.length <= 0) {
             return res.status(401).json({message: constants.USER_NOT_FOUND})

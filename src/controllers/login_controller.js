@@ -10,10 +10,9 @@ exports.post = async (req, res) => {
         const rows = await serviceLogin.verificaSeEmailUsuarioExistente(req)
         if(rows.length > 0) {
 
-            let { email, password } = req.body
-            password = await bcrypt.hash(password, 10);
+            const { Email, Senha, ID_Paciente } = rows[0]
 
-            const novoLogin = {email: email, password: password}
+            const novoLogin = {id: ID_Paciente ,email: Email, password: Senha}
 
             const token = jwt.sign(novoLogin, constant.SECRET_KEY, { expiresIn: '1h' })
 
